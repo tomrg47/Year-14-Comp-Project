@@ -28,6 +28,10 @@ def Browse_cmd():
 def options():
     win = Window(app, title='Options Menu')
 
+    def change_bg_colour(x,y):
+        colour_bg = bg_waffle[x,y].color
+        app.bg = colour_bg
+        win.bg = colour_bg
     def change_txt_colour(x, y):
         colour = txt_waffle[x, y].color
         title_text.text_color= colour
@@ -39,11 +43,26 @@ def options():
         return slider_value
 
     slider = Slider(win, start=10, end=80, command=change_txt_size)
+    colours=["red","green","blue","pink","orange","black","grey","white","yellow"]
     txt_waffle = Waffle(win, height=3, width=3, align="left", command=change_txt_colour)
-    txt_waffle[0, 0].color = "red"
-    txt_waffle[1, 0].color = "green"
-    txt_waffle[2, 0].color = "blue"
+    m = 0
+    n = 0
+    for v in range(0, 9):
+        txt_waffle[m, n].color = colours[v]
+        m = m + 1
+        if m == 3:
+            m = 0
+            n = n + 1
 
+    bg_waffle =Waffle(win, height=3, width=3, align="right", command=change_bg_colour)
+    x = 0
+    y = 0
+    for i in range(0,9):
+        bg_waffle[x, y].color=colours[i]
+        x = x+1
+        if x == 3:
+            x = 0
+            y = y+1
     test_text =Text(win, text = 'hello')
 
 # app = App()  # creates the file window
