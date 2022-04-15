@@ -29,11 +29,13 @@ def options():
     win = Window(app, title='Options Menu')
 
     def change_txt_colour(x, y):
-        title_text.color= txt_waffle[x,y].color
-
+        colour = txt_waffle[x, y].color
+        title_text.text_color= colour
+        test_text.text_color= colour
 
     def change_txt_size(slider_value):
         title_text.size = slider_value
+        test_text.size = slider_value
         return slider_value
 
     slider = Slider(win, start=10, end=80, command=change_txt_size)
@@ -41,6 +43,9 @@ def options():
     txt_waffle[0, 0].color = "red"
     txt_waffle[1, 0].color = "green"
     txt_waffle[2, 0].color = "blue"
+
+    test_text =Text(win, text = 'hello')
+
 # app = App()  # creates the file window
 # app.title = "Main Menu"  # Names the created window
 
