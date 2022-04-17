@@ -1,5 +1,6 @@
 from guizero import *
 from tkinter import filedialog
+from Neural_network import *
 
 app = App()  # creates the file window
 app.title = "Main Menu"  # Names the created window
@@ -15,7 +16,7 @@ def Browse_cmd():
         Back_button.hide()
 
     def Sort_cmd():
-        open(exec('Neural_Network.py'))
+        pass
 
     files = filedialog.askopenfiles()
     if len(files) >= 1:
