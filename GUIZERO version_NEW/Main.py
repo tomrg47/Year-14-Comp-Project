@@ -1,10 +1,12 @@
 from guizero import *
 from tkinter import filedialog
-#from Neural_network import *
-
+from Neural_network import *
+from Neural_network import model
+import numpy as np
 app = App()  # creates the file window
 app.title = "Main Menu"  # Names the created window
 
+#model.summary()
 
 def Browse_cmd():
     def Back_cmd():
@@ -16,8 +18,20 @@ def Browse_cmd():
         Back_button.hide()
 
     def Sort_cmd():
-                pass
-    files = filedialog.askopenfiles()
+        x = 0
+        while x <= len(files)-1:
+
+            img = tf.keras.utils.load_img(files[x], target_size=(180, 180))
+            img_array = tf.keras.utils.img_to_array(img)
+            x=x+1
+        img_array = tf.expand_dims(img_array, 0)
+        predictions = model.predict(img_array)
+
+
+
+    files = filedialog.askopenfilenames()
+    print(files)
+
     if len(files) >= 1:
         title_text.hide()
         Browse_Button.hide()
@@ -46,6 +60,7 @@ def options():
         colour = txt_waffle[x, y].color
         title_text.text_color = colour
         test_text.text_color = colour
+
 
     def change_txt_size(slider_value):
         title_text.size = slider_value

@@ -53,13 +53,12 @@ model.add(layers.Conv2D(64, (3, 3), activation='relu'))
 model.add(layers.Flatten())
 model.add(layers.Dense(64, activation='relu'))
 model.add(layers.Dense(2))
-#model.summary()
 
 # now compile the model with the recommended hyperparamaters bt tensorflow
 model.compile(optimizer='adam',
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
               metrics=['accuracy'])
-model.fit(train_ds, validation_data=val_ds, epochs=10)
+model.fit(train_ds, validation_data=val_ds, epochs=1)
 
 # Evaluate the model to see accuracy
 test_loss, test_acc = model.evaluate(train_ds, verbose=2)
