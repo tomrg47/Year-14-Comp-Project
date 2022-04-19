@@ -3,10 +3,17 @@ from tkinter import filedialog
 from Neural_network import *
 from Neural_network import model
 import numpy as np
+
 app = App()  # creates the file window
 app.title = "Main Menu"  # Names the created window
+Rural_list=[]
+Urban_list=[]
+def Save_screen(Rural_list,Urban_list,Sorting_txt):
+    Sorting_txt.hide()
+    app.title="Save Screen"
+    Save_text = Text(app, text="Save Menu")
+    Sort_text = Text(app, text="Sorting Complete")
 
-#model.summary()
 
 def Browse_cmd():
     def Back_cmd():
@@ -18,16 +25,38 @@ def Browse_cmd():
         Back_button.hide()
 
     def Sort_cmd():
+
         x = 0
+        class_names = ["Urban", "Landscape/Rural"]
+        Urban_list = []
+        Rural_list = []
         while x <= len(files)-1:
+            Sort_ttext.hide()
+            Sort_button.hide()
+            Back_button.hide()
+            Sorting_txt = Text(app,text='Sorting...')
 
-            img = tf.keras.utils.load_img(files[x], target_size=(180, 180))
+            img = tf.keras.utils.load_img(files[x], target_size=(256, 256))# 256,256 works
             img_array = tf.keras.utils.img_to_array(img)
+            img_array = tf.expand_dims(img_array, 0)
+            predictions = model.predict(img_array)
+            print(predictions)
+            score = tf.nn.softmax(predictions[0])
+            print("This image most likely belongs to {} with a {:.2f} percent confidence".format(class_names[np.argmax(score)],
+                                                                                                 100*np.max(score)))
+
+            if class_names[np.argmax(score)] == "Urban":
+                Urban_list.append(img)
+                print(Urban_list)
+
+
+            elif class_names[np.argmax(score)] == "Landscape/Rural":
+                Rural_list.append(img)
+                print(Rural_list)
+
             x=x+1
-        img_array = tf.expand_dims(img_array, 0)
-        predictions = model.predict(img_array)
 
-
+        Save_screen(Rural_list, Urban_list,Sorting_txt)
 
     files = filedialog.askopenfilenames()
     print(files)
@@ -49,7 +78,7 @@ def Browse_cmd():
 
 
 def options():
-    win = Window(app, title='Options Menu')
+    win = Window(app, title='Options Menu',layout="auto")
 
     def change_bg_colour(x, y):
         colour_bg = bg_waffle[x, y].color
@@ -63,13 +92,17 @@ def options():
 
 
     def change_txt_size(slider_value):
-        title_text.size = slider_value
-        test_text.size = slider_value
-        return slider_value
+        app.text_size = slider_value
+        win.text_size = slider_value
 
-    slider = Slider(win, start=10, end=80, command=change_txt_size)
-    colours = ["red", "green", "blue", "pink", "orange", "black", "grey", "white", "yellow"]
-    txt_waffle = Waffle(win, height=3, width=3, align="left", command=change_txt_colour)
+
+
+
+
+    colours = ["red", "green", "blue", "pink", "orange", "black", "grey", "white", None]
+    txt_waffle = Waffle(win, height=3, width=3, align="left", command=change_txt_colour,pad=20)
+    slider = Slider(win, start=10, end=80, command=change_txt_size,align='left')
+
     m = 0
     n = 0
     for v in range(0, 9):
@@ -79,7 +112,7 @@ def options():
             m = 0
             n = n + 1
 
-    bg_waffle = Waffle(win, height=3, width=3, align="right", command=change_bg_colour)
+    bg_waffle = Waffle(win, height=3, width=3, align="right", command=change_bg_colour,pad=20)
     x = 0
     y = 0
     for i in range(0, 9):
@@ -88,13 +121,13 @@ def options():
         if x == 3:
             x = 0
             y = y + 1
-    test_text = Text(win, text='hello')
+    global s_txt
+    test_text = Text(win, text='hello', align="top")
 
-    close_button = PushButton(win, text='Close', command=win.destroy)
+    close_button = PushButton(win, text='Close', command=win.destroy, align='bottom')
 
 
 title_text = Text(app, text='Image Recognition')  # Adds a Title within the window
-# options = options_menu(10, 'black', 'grey', app)
 Browse_Button = PushButton(app, text='Open Files', command=Browse_cmd)  # creates a Push button on the app window.
 Option_Button = PushButton(app, text='Options', command=options)
 Exit_Button = PushButton(app, text='Exit', command=quit)  # quits the app on the button click event

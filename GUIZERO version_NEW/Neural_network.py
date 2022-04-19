@@ -58,7 +58,7 @@ model.add(layers.Dense(2))
 model.compile(optimizer='adam',
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
               metrics=['accuracy'])
-model.fit(train_ds, validation_data=val_ds, epochs=1)
+model.fit(train_ds, validation_data=val_ds, epochs=7)
 
 # Evaluate the model to see accuracy
 test_loss, test_acc = model.evaluate(train_ds, verbose=2)
