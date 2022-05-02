@@ -3,23 +3,34 @@ from tkinter import filedialog
 from Neural_network import *
 from Neural_network import model
 import numpy as np
+from PIL import *
 
 awidth = 300
 aheight = 300
 
 app = App(height=aheight, width=awidth)  # creates the file window
 app.title = "Main Menu"  # Names the created window
-
+opend_imgs = []
 Rural_list = []
 Urban_list = []
+r_Save_list = []
 
 
-def Save_screen(Rural_list, Urban_list, Sorting_txt):
+def Save_screen(r_Save_list, Urban_list, Sorting_txt):
     Sorting_txt.hide()
 
     def rural():
         print("hi")
-        save = filedialog.asksaveasfile(initialfile=Rural_list)
+        save = filedialog.asksaveasfile(mode='w',defaultextension=".*",
+                                        filetypes=(("Jpeg file", "*.jpg"), ("All Files", "*.*")))
+        if save:
+
+            saveas = 0
+            while saveas <= r_Save_list:
+                save.write(r_Save_list[saveas])
+                saveas = saveas + 1
+                save.close()
+
 
     def urban():
         print("hello")
@@ -46,7 +57,7 @@ def Browse_cmd():
         Back_button.hide()
 
     def Sort_cmd():
-
+        temp_List = []
         x = 0
         class_names = ["Landscape", "Urban"]
 
@@ -57,8 +68,12 @@ def Browse_cmd():
             Sorting_txt = Text(app, text='Sorting...')
 
             img = tf.keras.utils.load_img(files[x], target_size=(256, 256))  # 256,256 works
+            current = Image.open(files[x])
+            opend_imgs.append(current)
             img_array = tf.keras.utils.img_to_array(img)
             img_array = tf.expand_dims(img_array, 0)
+            print(img_array)
+
             predictions = model.predict(img_array)
             print(predictions)
             score = tf.nn.softmax(predictions[0])
@@ -67,17 +82,30 @@ def Browse_cmd():
                 100 * np.max(score)))
 
             if class_names[np.argmax(score)] == "Urban":
-                Urban_list.append(img)
+                Urban_list.append(files[x])
                 print(Urban_list)
+                for item2 in Urban_list:
+                    temps = item2
+                    print(temps.split('/', 1))
 
             if class_names[np.argmax(score)] == "Landscape":
-                Rural_list.append(img)
-                print(Rural_list)
+                current_img = Image.open(files[x])
+
+                #Rural_list.append(files[x])
+
+                #for item in Rural_list:
+                 #   temp = item[::-1]
+
+                  #  ttemp = temp.split('/', 1)[0][::-1]
+
+                r_Save_list.append(current_img)
+
+                #print(Rural_list)
 
             x = x + 1
 
-        Save_screen(Rural_list, Urban_list, Sorting_txt)
-
+        Save_screen(r_Save_list, Urban_list, Sorting_txt)
+    global files
     files = filedialog.askopenfilenames()
     print(files)
 
