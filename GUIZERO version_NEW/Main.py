@@ -1,9 +1,13 @@
+import skimage.io
 from guizero import *
 from tkinter import filedialog
 from Neural_network import *
 from Neural_network import model
 import numpy as np
 from PIL import *
+import cv2
+from skimage import *
+
 
 awidth = 300
 aheight = 300
@@ -14,6 +18,7 @@ opend_imgs = []
 Rural_list = []
 Urban_list = []
 r_Save_list = []
+test = ['', '']
 
 
 def Save_screen(r_Save_list, Urban_list, Sorting_txt):
@@ -21,15 +26,36 @@ def Save_screen(r_Save_list, Urban_list, Sorting_txt):
 
     def rural():
         print("hi")
-        save = filedialog.asksaveasfile(mode='w',defaultextension=".*",
-                                        filetypes=(("Jpeg file", "*.jpg"), ("All Files", "*.*")))
+        save = filedialog.asksaveasfilename(defaultextension=".*",
+                                            filetypes=(
+                                                ("Jpeg file", "*.jpg"), ("Jfif File", "*.jfif"), ("All Files", "*.*")))
+        x = 0
+        print(save)
         if save:
+            dir = save
+            print(dir)
+            #arr = np.ndarray(r_Save_list)
+            #print(arr)
+            ext = save
+            #print(ext)
+            #print(ext[0])
+            filetype = str(ext[0]).split('.')[::-1]
+            #print(filetype)
+            combined = str(filetype[1]) + '.' + str(filetype[0])
+            #print(combined)
+            save = open(save, 'w')
+            #arr = np.ndarray(r_Save_list)
+            #print(arr)
+            #arr2 = np.array(test)
 
-            saveas = 0
-            while saveas <= r_Save_list:
-                save.write(r_Save_list[saveas])
-                saveas = saveas + 1
-                save.close()
+            #concat = np.concatenate([arr, arr2])
+            #print(concat)
+            #saveas = (str(combined, arr))
+            image = r_Save_list[0]
+            resize_D = (image.shape[0]//10, image.shape[1]//10, image.shape[2])
+            resize = skimage.transform.resize(image =image, output_shape = resize_D)
+            resize = skimage.img_as_ubyte(resize)
+            skimage.io.imsave(fname=str(combined), arr=resize)
 
 
     def urban():
@@ -68,12 +94,15 @@ def Browse_cmd():
             Sorting_txt = Text(app, text='Sorting...')
 
             img = tf.keras.utils.load_img(files[x], target_size=(256, 256))  # 256,256 works
-            current = Image.open(files[x])
-            opend_imgs.append(current)
+
             img_array = tf.keras.utils.img_to_array(img)
             img_array = tf.expand_dims(img_array, 0)
             print(img_array)
+            testt = cv2.imread(files[x])
 
+            cv2.waitKey(0)
+            win = 'test'
+            cv2.imshow(win, testt)
             predictions = model.predict(img_array)
             print(predictions)
             score = tf.nn.softmax(predictions[0])
@@ -84,29 +113,30 @@ def Browse_cmd():
             if class_names[np.argmax(score)] == "Urban":
                 Urban_list.append(files[x])
                 print(Urban_list)
-                for item2 in Urban_list:
-                    temps = item2
-                    print(temps.split('/', 1))
+            # for item2 in Urban_list:
+            #    temps = item2
+            #   print(temps.split('/', 1))
 
             if class_names[np.argmax(score)] == "Landscape":
-                current_img = Image.open(files[x])
+                current_img = skimage.io.imread(files[x])
 
-                #Rural_list.append(files[x])
+                # Rural_list.append(files[x])
 
-                #for item in Rural_list:
-                 #   temp = item[::-1]
+                # for item in Rural_list:
+                #   temp = item[::-1]
 
-                  #  ttemp = temp.split('/', 1)[0][::-1]
+                #  ttemp = temp.split('/', 1)[0][::-1]
 
                 r_Save_list.append(current_img)
 
-                #print(Rural_list)
+                # print(Rural_list)
 
             x = x + 1
 
         Save_screen(r_Save_list, Urban_list, Sorting_txt)
+
     global files
-    files = filedialog.askopenfilenames()
+    files = filedialog.askopenfilenames(filetypes=[("Jfif Files", "*.jfif")])
     print(files)
 
     if len(files) >= 1:
