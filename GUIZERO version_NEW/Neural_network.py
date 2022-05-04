@@ -54,11 +54,11 @@ model.add(layers.Flatten())
 model.add(layers.Dense(64, activation='relu'))
 model.add(layers.Dense(2))
 
-# now compile the model with the recommended hyperparamaters bt tensorflow
+# now compile the model with the recommended hyper-parameters by tensorflow
 model.compile(optimizer='adam',
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
               metrics=['accuracy'])
-model.fit(train_ds, validation_data=val_ds, epochs=5)
+model.fit(train_ds, validation_data=val_ds, epochs=7)
 
 # Evaluate the model to see accuracy
 test_loss, test_acc = model.evaluate(train_ds, verbose=2)

@@ -8,7 +8,6 @@ from PIL import *
 import cv2
 from skimage import *
 
-
 awidth = 300
 aheight = 300
 
@@ -32,35 +31,40 @@ def Save_screen(r_Save_list, Urban_list, Sorting_txt):
         x = 0
         print(save)
         if save:
-            dir = save
-            print(dir)
-            #arr = np.ndarray(r_Save_list)
-            #print(arr)
+            # arr = np.ndarray(r_Save_list)
+            # print(arr)
             ext = save
-            #print(ext)
-            #print(ext[0])
-            filetype = str(ext[0]).split('.')[::-1]
-            #print(filetype)
+            # print(ext)
+            # print(ext[0])
+            filetype = str(ext).split('.')[::-1]
+            # print(filetype)
             combined = str(filetype[1]) + '.' + str(filetype[0])
-            #print(combined)
+            # print(combined)
             save = open(save, 'w')
-            #arr = np.ndarray(r_Save_list)
-            #print(arr)
-            #arr2 = np.array(test)
+            # arr = np.ndarray(r_Save_list)
+            # print(arr)
+            # arr2 = np.array(test)
 
-            #concat = np.concatenate([arr, arr2])
-            #print(concat)
-            #saveas = (str(combined, arr))
+            # concat = np.concatenate([arr, arr2])
+            # print(concat)
+            # saveas = (str(combined, arr))
             image = r_Save_list[0]
-            resize_D = (image.shape[0]//10, image.shape[1]//10, image.shape[2])
-            resize = skimage.transform.resize(image =image, output_shape = resize_D)
-            resize = skimage.img_as_ubyte(resize)
-            skimage.io.imsave(fname=str(combined), arr=resize)
-
+            # resize_D = (image.shape[0]//10, image.shape[1]//10, image.shape[2])
+            # resize = skimage.transform.resize(image =image, output_shape = resize_D)
+            # resize = skimage.img_as_ubyte(resize)
+            skimage.io.imsave(fname=str(combined), arr=image)
 
     def urban():
         print("hello")
-        save = filedialog.asksaveasfile(initialfile=Urban_list)
+        save = filedialog.asksaveasfile(defaultextension=".*",
+                                        filetypes=(
+                                            ("Jpeg file", "*.jpg"), ("Jfif File", "*.jfif"), ("All Files", "*.*")))
+        if save:
+            ext = save
+            filetype = str(ext).split('.')[::-1]
+            combined = str(filetype[1]) + '.' + str(filetype[0])
+            image = Urban_list[0]
+            skimage.io.imsave(fname=str(combined), arr=image)
 
     app.title = "Save Screen"
     app.update()
