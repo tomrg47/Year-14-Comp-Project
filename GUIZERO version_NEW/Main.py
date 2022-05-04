@@ -40,7 +40,7 @@ def Save_screen(r_Save_list, Urban_list, Sorting_txt):
             # print(filetype)
             combined = str(filetype[1]) + '.' + str(filetype[0])
             # print(combined)
-            save = open(save, 'w')
+            # save = open(save, 'w')
             # arr = np.ndarray(r_Save_list)
             # print(arr)
             # arr2 = np.array(test)
@@ -56,15 +56,15 @@ def Save_screen(r_Save_list, Urban_list, Sorting_txt):
 
     def urban():
         print("hello")
-        save = filedialog.asksaveasfile(defaultextension=".*",
-                                        filetypes=(
-                                            ("Jpeg file", "*.jpg"), ("Jfif File", "*.jfif"), ("All Files", "*.*")))
-        if save:
-            ext = save
-            filetype = str(ext).split('.')[::-1]
-            combined = str(filetype[1]) + '.' + str(filetype[0])
-            image = Urban_list[0]
-            skimage.io.imsave(fname=str(combined), arr=image)
+        saves = filedialog.asksaveasfilename(defaultextension=".*",
+                                             filetypes=(
+                                                    ("Jpeg file", "*.jpg"), ("Jfif File", "*.jfif"), ("All Files", "*.*")))
+        if saves:
+            exts = saves
+            filetype = str(exts).split('.')[::-1]
+            combined2 = str(filetype[1]) + '.' + str(filetype[0])
+            image2 = Urban_list[0]
+            skimage.io.imsave(fname=str(combined2), arr=image2)
 
     app.title = "Save Screen"
     app.update()
@@ -115,7 +115,8 @@ def Browse_cmd():
                 100 * np.max(score)))
 
             if class_names[np.argmax(score)] == "Urban":
-                Urban_list.append(files[x])
+                current_img2 = skimage.io.imread(files[x])
+                Urban_list.append(current_img2)
                 print(Urban_list)
             # for item2 in Urban_list:
             #    temps = item2
@@ -140,7 +141,8 @@ def Browse_cmd():
         Save_screen(r_Save_list, Urban_list, Sorting_txt)
 
     global files
-    files = filedialog.askopenfilenames(filetypes=[("Jfif Files", "*.jfif")])
+    files = filedialog.askopenfilenames(filetypes=(
+        ("Jpeg file", "*.jpg"), ("Jfif File", "*.jfif"), ("All Files", "*.*")))
     print(files)
 
     if len(files) >= 1:

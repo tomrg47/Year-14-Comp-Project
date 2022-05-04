@@ -4,8 +4,8 @@ from tensorflow.keras import datasets, layers, models
 import matplotlib.pyplot as plt
 import pathlib
 
-data_dir = "C:/Users/tomrg/OneDrive/Desktop/Year-14-Comp-Project/GUIZERO version_NEW/train"
-val_dir = "C:/Users/tomrg/OneDrive/Desktop/Year-14-Comp-Project/GUIZERO version_NEW/val"
+data_dir = "C:/Users/tomrg/OneDrive/Desktop/Year-14-Comp-Project/GUIZERO version_NEW/rural_and_urban_photos/train"
+val_dir = "C:/Users/tomrg/OneDrive/Desktop/Year-14-Comp-Project/GUIZERO version_NEW/rural_and_urban_photos/val"
 batch_size = 32
 
 train_ds = tf.keras.utils.image_dataset_from_directory(
